@@ -32,5 +32,11 @@ const UsuarioSchema = Schema({
         default: false
     },
 });
+/**Sobre escribimos el metodo toJSON para que cargue solo los datos menos el password y no lo envie para res */
+UsuarioSchema.methods.toJSON = function () {
+    const { __v, password, ...usuario } = this.toObject();
+    return usuario;
+}
+
 /**Monngoose le cambia a Usuarios a la coelccione en la bd */
 module.exports = model('Usuario', UsuarioSchema);

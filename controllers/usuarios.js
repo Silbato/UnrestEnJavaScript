@@ -3,11 +3,23 @@ const Usuario = require('../models/usuario');
 const bcryptjs = require('bcryptjs');
 
 
-const usuariosGet = (req = request, res = response) => {
+const usuariosGet = async (req = request, res = response) => {
     const query = req.query;
+    const filtroEstadoAtivo = { estado: true };
+    const { limite = 5, desde = 0 } = req.query;
+    //const total = await Usuario.countDocuments(filtroEstadoAtivo);
+    //const usuarios = await Usuario.find(filtroEstadoAtivo).skip(Number(desde)).limit(Number(limite));
+    /**Armo una coleccion de promesas para que no sea autobloquenate como arriba, y las ejecuta en forma simultanea y no en secuencia */
+    /**Si diera erroa alguna de las de adentro, lo devuevve como coleccion */
+    const [total, usuarios] = await Promise.all([
+        Usuario.countDocuments(filtroEstadoAtivo),
+        Usuario.find(filtroEstadoAtivo).skip(Number(desde)).limit(Number(limite))
+    ]);
+
     res.json({
         msg: 'get API - controlador usuarios',
-        query
+        total,
+        usuarios,
     });
 }
 const usuariosPost = async (req, res = response) => {
@@ -15,13 +27,7 @@ const usuariosPost = async (req, res = response) => {
     const { nombre, correo, password, rol } = req.body;
     const usuario = new Usuario({ nombre, correo, password, rol });
     /**Ver si el correo existe */
-    const existeEmail = await Usuario.findOne({ correo: correo });
-    if (existeEmail) {
-        return res.status(400).json({
-            msg: 'Correo duplicado o ya registrado.'
-        });
 
-    }
     /**Encriptar pass */
     const salt = bcryptjs.genSaltSync();
     usuario.password = bcryptjs.hashSync(password, salt);
@@ -37,11 +43,21 @@ const usuariosDelete = (req, res = response) => {
         msg: 'delete API - controlador usuarios'
     });
 }
-const usuariosPut = (req, res = response) => {
-    const id = req.params.id;
+const usuariosPut = async (req, res = response) => {
+    const { id } = req.params;
+    const { _id, password, google, correo, ...resto } = req.body;
+
+    /**ver si existe en la BD */
+    if (password) {
+        /**Encriptar pass */
+        const salt = bcryptjs.genSaltSync();
+        resto.password = bcryptjs.hashSync(password, salt);
+    }
+    const usuarioDB = await Usuario.findByIdAndUpdate(id, resto);
+    /** */
     res.json({
         msg: 'put API - controlador usuarios',
-        id
+        usuarioDB
     });
 }
 
