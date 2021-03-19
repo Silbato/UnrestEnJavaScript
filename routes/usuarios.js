@@ -13,7 +13,11 @@ router.put('/:id', [
     check('rol').custom((rol) => esRolValido(rol)),
     validarCampos
 ], usuariosPut);
-router.delete('/', usuariosDelete);
+router.delete('/:id', [
+    check('id', 'Al parecer no es un ID valido').isMongoId(),
+    check('id').custom(existeUsuarioPorId),
+    validarCampos
+], usuariosDelete);
 /**Path , middlewares en un array, y despues el controador al final(usuariosPOST) */
 router.post('/', [
     check('correo', 'El correo no es valido').isEmail(),

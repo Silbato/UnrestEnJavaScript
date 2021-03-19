@@ -38,9 +38,16 @@ const usuariosPost = async (req, res = response) => {
         usuario
     });
 }
-const usuariosDelete = (req, res = response) => {
+const usuariosDelete = async (req, res = response) => {
+    const { id } = req.params;
+
+    /**Borrado Fisico, ya se hizo validacion de que exista en los paths */
+    //const usuario = await Usuario.findByIdAndDelete(id);
+    /** Borrado logico o estado inactivo*/
+    const usuario = await Usuario.findByIdAndUpdate(id, { estado: false });
     res.json({
-        msg: 'delete API - controlador usuarios'
+        msg: 'delete API - controlador usuarios',
+        usuario
     });
 }
 const usuariosPut = async (req, res = response) => {
