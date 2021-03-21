@@ -34,7 +34,9 @@ const UsuarioSchema = Schema({
 });
 /**Sobre escribimos el metodo toJSON para que cargue solo los datos menos el password y no lo envie para res */
 UsuarioSchema.methods.toJSON = function () {
-    const { __v, password, ...usuario } = this.toObject();
+    const { __v, password, _id, ...usuario } = this.toObject();
+    /**Le cambia el nombre a la propiedad, de _id a uid en todos los lugares que usemos el esquema Usuario */
+    usuario.uid = _id;
     return usuario;
 }
 

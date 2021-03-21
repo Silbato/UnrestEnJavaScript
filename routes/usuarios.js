@@ -1,8 +1,13 @@
 const { Router } = require('express');
 const { usuariosGet, usuariosDelete, usuariosPost, usuariosPut } = require('../controllers/usuarios');
-const { check } = require('express-validator');
+const { validarJWT } = require('../middlewares/validar-jwt');
 const { validarCampos } = require('../middlewares/validar-campos');
+
+const { esAdmin, tieneRol } = require('../middlewares/validar-rol');
 const { esRolValido, emailExiste, existeUsuarioPorId } = require('../helpers/db-validators');
+const { check } = require('express-validator');
+
+
 const router = Router();
 
 /**lo ordenamos desde un controlador de direcciones de usuario, se pasan por parametro no es funcion por no tener los () */
@@ -14,6 +19,9 @@ router.put('/:id', [
     validarCampos
 ], usuariosPut);
 router.delete('/:id', [
+    validarJWT,
+    //esAdmin,
+    tieneRol('ADMIN'),
     check('id', 'Al parecer no es un ID valido').isMongoId(),
     check('id').custom(existeUsuarioPorId),
     validarCampos

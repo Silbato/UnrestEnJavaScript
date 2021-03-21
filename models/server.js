@@ -1,6 +1,8 @@
 const express = require('express');
 const cors = require('cors');
-const { dbConection } = require('../database/config')
+const { dbConection } = require('../database/config');
+
+
 
 class Server {
 
@@ -9,6 +11,7 @@ class Server {
 
         this.port = process.env.PORT;
         this.usuariosRoutePath = '/api/usuarios';
+        this.authPath = '/api/auth';
         /**Lanzar la conexion a la BD */
         this.conectarDB();
         /**Middlewares */
@@ -22,6 +25,9 @@ class Server {
     }
 
     routes() {
+
+        /**Path autenticacion y login */
+        this.app.use(this.authPath, require('../routes/auth'));
         /**Path de /usuarios */
         this.app.use(this.usuariosRoutePath, require('../routes/usuarios'));
         /**Otros path distintos... */
@@ -33,8 +39,10 @@ class Server {
         });
     }
     middlewares() {
+
         /**Lectura y parseo del body si es JSON */
         this.app.use(express.json());
+
         /**Directorio publico */
         /**use. para iniciar los middlewares , en este caso en vez de usar el path / usa el html que tenemos en la carpeta public*/
         this.app.use(express.static('public'));

@@ -45,6 +45,8 @@ const usuariosDelete = async (req, res = response) => {
     //const usuario = await Usuario.findByIdAndDelete(id);
     /** Borrado logico o estado inactivo*/
     const usuario = await Usuario.findByIdAndUpdate(id, { estado: false });
+    /**Este usuario viene de la validacion del middleware que verifica si el token ya fue validado y lo guarda en req.usuario */
+
     res.json({
         msg: 'delete API - controlador usuarios',
         usuario
