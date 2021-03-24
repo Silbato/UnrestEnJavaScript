@@ -12,6 +12,7 @@ class Server {
         this.port = process.env.PORT;
         this.usuariosRoutePath = '/api/usuarios';
         this.authPath = '/api/auth';
+        this.categoriasPath = '/api/categorias';
         /**Lanzar la conexion a la BD */
         this.conectarDB();
         /**Middlewares */
@@ -31,6 +32,7 @@ class Server {
         /**Path de /usuarios */
         this.app.use(this.usuariosRoutePath, require('../routes/usuarios'));
         /**Otros path distintos... */
+        this.app.use(this.categoriasPath, require('../routes/categorias'));
     }
 
     listen() {
