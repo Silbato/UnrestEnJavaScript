@@ -8,11 +8,14 @@ class Server {
 
     constructor() {
         this.app = express();
-
         this.port = process.env.PORT;
-        this.usuariosRoutePath = '/api/usuarios';
+        /**paths varios */
+
         this.authPath = '/api/auth';
+        this.buscarPath = '/api/buscar';
         this.categoriasPath = '/api/categorias';
+        this.productosPath = '/api/productos';
+        this.usuariosRoutePath = '/api/usuarios';
         /**Lanzar la conexion a la BD */
         this.conectarDB();
         /**Middlewares */
@@ -32,7 +35,10 @@ class Server {
         /**Path de /usuarios */
         this.app.use(this.usuariosRoutePath, require('../routes/usuarios'));
         /**Otros path distintos... */
+
         this.app.use(this.categoriasPath, require('../routes/categorias'));
+        this.app.use(this.productosPath, require('../routes/productos'));
+        this.app.use(this.buscarPath, require('../routes/buscar'));
     }
 
     listen() {

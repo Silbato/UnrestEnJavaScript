@@ -1,5 +1,5 @@
 const { TokenExpiredError } = require('jsonwebtoken');
-const { Categoria } = require('../models');
+const { Categoria, Producto } = require('../models');
 const Role = require('../models/role')
 const Usuario = require('../models/usuario')
 
@@ -31,4 +31,10 @@ const existeCategoria = async (id) => {
         throw new Error(`El id: ${id} no corresponde a una categoria existente...`)
     }
 }
-module.exports = { esRolValido, emailExiste, existeUsuarioPorId, existeCategoria }
+const existeProducto = async (id) => {
+    const existeProd = await Producto.findById(id);
+    if (!existeProd) {
+        throw new Error(`El id:${id} no corresponde a un producto exisitente...`)
+    }
+}
+module.exports = { esRolValido, emailExiste, existeUsuarioPorId, existeCategoria, existeProducto }

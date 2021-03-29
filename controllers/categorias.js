@@ -46,4 +46,28 @@ const crearCategoria = async (req, res = response) => {
     /**Envio q se grabó bien */
     res.status(201).json(categoria);
 }
-module.exports = { crearCategoria, obtenerCategoria, obtenerCategorias }
+const actualizarCategoria = async (req, res = response) => {
+    /**de los datos por path */
+    const { id } = req.params;
+    /**del body por si me los mandan */
+    const { estado, usuario, ...data } = req.body;
+
+    data.nombre = data.nombre.toUpperCase();
+    data.usuario = req.usuario._id;
+    /**grabar la seg coma para pasarle los datos a cambiar ... el new es para q grabe y devuevla el nuevo obj en response*/
+    const categoria = await Categoria.findByIdAndUpdate(id, data, { new: true });
+    /**Si se graba bien devolvera algo de tipo categoria */
+    res.json(categoria);
+};
+const borrarCategoria = async (req, res = response) => {
+    const { id } = req.params;
+
+    const categoria = await Categoria.findByIdAndUpdate(id, { estado: false }, { new: true })
+    res.json(
+        {
+            msg: 'API categorias delete',
+            categoria
+        }
+    );
+};
+module.exports = { crearCategoria, obtenerCategoria, obtenerCategorias, actualizarCategoria, borrarCategoria }
