@@ -31,8 +31,10 @@ const ProductoSchema = Schema({
     disponible: {
         type: Boolean,
         default: false
+    },
+    img: {
+        type: String
     }
-
 
 });
 /**Para modificar lo q devuelva el toJSON(le sacamos solo el __v y el estado de mongo) */
