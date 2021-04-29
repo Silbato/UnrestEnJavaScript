@@ -11,19 +11,19 @@ const login = async (req = request, res = response) => {
         const usuario = await Usuario.findOne({ correo });
         if (!usuario) {
             return res.status(400).json({
-                mse: 'Usuario incorecto, puede ser inactivo, inexistente, erroneo, etc. ...'
+                msg: 'Usuario incorecto, puede ser inactivo, inexistente, erroneo, etc. ...'
             });
         }
         if (!usuario.estado) {
             return res.status(400).json({
-                mse: 'Usuario inactivo, o el estado sería falso?, de aviso a un administrador para el alta?, etc.  ...'
+                msg: 'Usuario inactivo, o el estado sería falso?, de aviso a un administrador para el alta?, etc.  ...'
             });
         }
         /**Ver la contraseña, el bcryptjs compara el password con el usuario.password */
         const validPass = bcryptjs.compareSync(password, usuario.password);
         if (!validPass) {
             return res.status(400).json({
-                mse: 'Usuario incorrecto, la contraseña seria erronea?, ...'
+                msg: 'Usuario incorrecto, la contraseña seria erronea?, ...'
             });
         }
         /**Generar el jwt */
@@ -31,7 +31,7 @@ const login = async (req = request, res = response) => {
 
 
         res.json({
-            msg: 'post API - auth',
+
             usuario,
             password,
             token
@@ -44,4 +44,15 @@ const login = async (req = request, res = response) => {
     }
 
 }
-module.exports = { login }
+const renovarToken = async (req, res = response) => {
+    const { usuario } = req;
+    /**Generar el jwt */
+    const token = await generarJWT(usuario.id);
+
+    res.json({
+        usuario,
+        token
+    });
+
+}
+module.exports = { login, renovarToken }

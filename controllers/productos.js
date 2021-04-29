@@ -10,7 +10,7 @@ const obtenerProductos = async (req, res = response) => {
         Producto.countDocuments(filtroEstadoActivo), Producto.find(filtroEstadoActivo).populate('usuario', ['nombre', 'correo']).populate('categoria', ['nombre']).skip(Number(desde)).limit(Number(limite))
     ]);
     res.json({
-        msg: 'get API. controlador Categorias',
+        msg: 'get API. controlador Productos',
         total,
         productos
     });

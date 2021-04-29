@@ -1,6 +1,7 @@
 const { TokenExpiredError } = require('jsonwebtoken');
 const { Categoria, Producto } = require('../models');
-const Role = require('../models/role')
+const Role = require('../models/role');
+const Sala = require('../models/sala');
 const Usuario = require('../models/usuario')
 
 
@@ -37,6 +38,12 @@ const existeProducto = async (id) => {
         throw new Error(`El id:${id} no corresponde a un producto exisitente...`)
     }
 }
+const existeSala = async (id) => {
+    const existeSala = await Sala.findById(id);
+    if (!existeSala) {
+        throw new Error(`El id:${id} no corresponde a una sala existente...`)
+    }
+}
 const coleccionesPermitidas = (coleccion = '', colecciones = '') => {
     const incluida = colecciones.includes(coleccion);
     if (!incluida) {
@@ -44,4 +51,4 @@ const coleccionesPermitidas = (coleccion = '', colecciones = '') => {
     }
     return true;
 }
-module.exports = { esRolValido, emailExiste, existeUsuarioPorId, existeCategoria, existeProducto, coleccionesPermitidas }
+module.exports = { emailExiste, esRolValido, existeCategoria, existeProducto, existeSala, existeUsuarioPorId, coleccionesPermitidas }

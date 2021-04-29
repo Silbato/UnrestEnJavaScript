@@ -33,7 +33,7 @@ const validarJWT = async (req = request, res = response, next) => {
     } catch (error) {
         console.log(`Error por token invalido: ----->${error}`);
         res.status(401).json({
-            msg: 'Error al validar token jwt. Podrian ser varias las posibles causas...'
+            msg: 'Error al validar token jwt. Podrian ser varias las posibles causas...Pero, token vencido.'
         })
     }
 

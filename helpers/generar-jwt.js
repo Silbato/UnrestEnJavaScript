@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken');
+const { Usuario } = require('../models/index');
 
 const generarJWT = (uid = '') => {
     /**La idea seria recibir solo el uid para almacenarlo en el payload */
@@ -18,5 +19,30 @@ const generarJWT = (uid = '') => {
     })
 
 }
+const comprobarJWT = async (token = '') => {
 
-module.exports = { generarJWT }
+    try {
+
+        if (token.length < 10) {
+            return null;
+        }
+
+        const { uid } = jwt.verify(token, process.env.SECRETORPRIVATEKEY);
+        console.log(uid);
+        const usuario = await Usuario.findById(uid);
+        console.log(usuario);
+        if (usuario) {
+            if (usuario.estado) {
+                return usuario;
+            } else {
+                return null;
+            }
+        } else {
+            return null;
+        }
+
+    } catch (error) {
+        return null;
+    }
+}
+module.exports = { generarJWT, comprobarJWT }
